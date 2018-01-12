@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #container {
+            width: 500px;
+            height: 250px;
+            background: #ddd
+        }
+
+        path {
+            fill: none;
+            stroke: #4682b4;
+            stroke-width: 2;
+        }
+
+        .domain,
+        .tick line {
+            stroke: gray;
+            stroke-width: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <div id="bar"></div>
+    <!-- <svg width='100' height='100'>
+        <g transform='translate(0,20)'>
+             <rect width='10' height='10' y='30' x='30'></rect>
+        </g>
+       
+    </svg> -->
+    <script src="./js/d3-v3.js"></script>
+    <script>
+        // var w = 500,
+        //     h = 250,
+        //     margin = {
+        //         left: 50,
+        //         top: 30,
+        //         right: 20,
+        //         bottom: 20
+        //     },
+        //     g_w = w - margin.left - margin.right,
+        //     g_h = h - margin.top - margin.bottom;
+        // var svg = d3.select('#container')
+        //     .append('svg')
+        //     //width,height
+        //     .attr('width', w)
+        //     .attr('height', h);
+        // var data = [1, 3, 5, 7, 9, 7, 10, 12, 5]
+
+        // var g = svg.append('g')
+        //     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+        // var scale_x = d3.scale
+        //     .linear()
+        //     .domain([0, data.length - 1])
+        //     .range([0, g_w]);
+
+        // var scale_y = d3.scale
+        //     .linear()
+        //     .domain([0, d3.max(data)])
+        //     .range([g_h, 0]);
+
+        // var x_axis = d3.svg.axis().scale(scale_x),
+        //     y_axis = d3.svg.axis().scale(scale_y).orient('left');
+
+        // var area_generator = d3.svg.area()
+        //     .x(function (d, i) {
+        //         return scale_x(i)
+        //     })
+        //     .y0(g_h)
+        //     .y1(function (d) {
+        //         return scale_y(d)
+        //     })
+        //     .interpolate('cardinal')
+
+        // g.append('path')
+        //     .attr('d', area_generator(data))
+        //     .style('fill', 'steelblue');
+        // g.append('g')
+        //     .call(x_axis)
+        //     .attr('transform', 'translate(0,' + g_h + ')');
+
+        // g.append('g')
+        //     .call(y_axis)
+        //     .append('text')
+        //     .text('Price($)')
+        //     .attr('transform', 'rotate(-90)')
+        //     .attr('text-anchor', 'end')
+        //     .attr('dy', '1em');
+
+        var barData = [10, 40, 70, 20, 90],
+            bar_w = 50,
+            bar_h = 500,
+            bar_padding = 10,
+            svg_W = (bar_w + bar_padding) * barData.length;
+
+        var barScale = d3.scale
+            .linear()
+            .domain([0, d3.max(barData)])
+            .range([bar_h,0]);
+
+        var svg = d3.select('#bar')
+            .append('svg')
+            .attr('width', svg_W)
+            .attr('height', bar_h);
+
+        var bar = svg.selectAll('g')
+            .data(barData)
+            .enter()
+            .append('g')
+            .attr('transform', function (d, i) {
+                return "translate(" + i * (bar_w + bar_padding) + ",0)"
+            });
+
+        var rect = bar.append('rect')
+            .attr({
+                "y": function (d) {
+                    return barScale(d)
+                },
+                "width": bar_w,
+                "height":function(d){console.log(bar_h-barScale(d)); return  (bar_h-barScale(d));}
+            })
+            .style('fill', 'steelblue');
+
+        bar.append('text')
+            .text(function (d) {
+                return d
+            })
+            .attr({
+                y: function (d) {
+                    return barScale(d)
+                },
+                x: bar_w / 2,
+                'dy':15,
+                'text-anchor': 'middle'
+            })
+    </script>
+</body>
+
+</html>

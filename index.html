@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #chart div {
+            display: inline-block;
+            background: #4285F4;
+            width: 20px;
+            margin-right: 3px;
+        }
+
+        #chart1 div {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 3px;
+        }
+
+        circle {
+            fill: #4A988A;
+        }
+
+        text {
+            font-family: "Open Sans";
+            text-anchor: middle;
+            color: rgb(34, ​ 34, ​ 34);
+            font-size: 12px;
+        }
+
+        #line path {
+            fill: transparent;
+            stroke: green;
+        }
+    </style>
+</head>
+
+<body>
+    <svg id="bar" width="300" height="100"></svg>
+    <div id="chart">
+        <div></div>
+    </div>
+    <div id="chart1"></div>
+
+    <svg id="circle" width="300" height="100"></svg>
+    <svg id="line" width="200" height="100"></svg>
+
+        <script src="./js/d3.js"></script>
+        <script>
+            var data = [250, 210, 170, 130, 10];
+
+            var recH = 25;
+
+            //比例尺
+            var linear1 = d3.scaleLinear()
+                .domain([0, d3.max(data)])
+                .range([0, 250]);
+
+            d3.select('#bar').selectAll('rect')
+                .data(data)
+                .enter()
+                .append('rect')
+                .attr('x', 20)
+                .attr('y', function (d, i) {
+                    return i * recH;
+                })
+                .attr('width', function (d) {
+                    return linear1(d);
+                }) //d表示与当前元素绑定的数据，i代表索引号
+                .attr('height', recH - 2)
+                .attr('fill', 'steelblue');
+
+
+            //柱状图
+            d3.select('#chart')
+                .selectAll('div')
+                .data([10, 30, 42, 18, 20])
+                .enter()
+                .append('div')
+                .style('height', function (d) {
+                    return d + 'px'
+                });
+
+            //github 贡献表
+            const colorMap = d3.interpolateRgb(
+                d3.rgb('#d6e685'),
+                d3.rgb('#1e6823')
+            );
+            d3.select('#chart1')
+                .selectAll('div')
+                .data([.2, .4, 0, 0, .13, .92])
+                .enter()
+                .append('div')
+                .style('background', function (d) {
+                    return d == 0 ? '#eee' : colorMap(d)
+                })
+
+            //圆形
+
+            var circleData = [{
+                label: "7am",
+                sales: 20
+            }, {
+                label: "8am",
+                sales: 12
+            }, {
+                label: "9am",
+                sales: 8
+            }, {
+                label: "10am",
+                sales: 27
+            }];
+
+            var g = d3.select('#circle') //g group
+                .selectAll('g')
+                .data(circleData)
+                .enter()
+                .append('g');
+
+            g.append('circle')
+                .attr('cy', 40)
+                .attr('cx', (d, i) => (i + 1) * 50)
+                .attr('r', (d) => d.sales);
+
+            g.append('text')
+                .attr('y', 90)
+                .attr('x', (d, i) => (i + 1) * 50)
+                .text((d) => d.label)
+
+            //折线
+            const dataLine = [{
+                    x: 0,
+                    y: 30
+                },
+                {
+                    x: 50,
+                    y: 20
+                },
+                {
+                    x: 100,
+                    y: 40
+                },
+                {
+                    x: 150,
+                    y: 80
+                },
+                {
+                    x: 200,
+                    y: 95
+                }
+            ];
+            var line=d3.line()
+            .x((d)=>d.x)
+            .y((d)=>100-d.x)
+            .interpolate("cardinal");
+
+            d3.select('#line')
+            .append('path')
+            .attr('stroke-width',2)
+            .attr('d',line(dataLine))
+        </script>
+</body>
+
+</html>
